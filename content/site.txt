@@ -1,0 +1,17 @@
+﻿Title: Kirby
+
+----
+
+Author: Wilhearts
+
+----
+
+Description: Kirby is awesome
+
+----
+
+Keywords: kirby, cms, kirbycms, php, filesystem
+
+----
+
+Analytics: UA-XXXXX-X

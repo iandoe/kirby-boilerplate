@@ -1,0 +1,18 @@
+{
+  "folders":
+  [
+    {
+      "path": ".",
+      "follow_symlinks": true,
+      "file_exclude_patterns": ["*.png", "*.ico", "*.gif", "*.jpg"],
+      "folder_exclude_patterns": [".sass-cache", "node_modules", "assets/fonts", "assets/img", "kirby", "panel", "thumbs"]
+    }
+  ],
+  "build_systems":
+  [
+  {
+    "name": "Grunt",
+    "shell_cmd": "grunt --no-color"
+  }
+  ],
+}
