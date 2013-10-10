@@ -16,12 +16,13 @@ module.exports = function(grunt) {
       js: "assets/js",
       js_plugins: ["assets/js/vendor/*.js", "!assets/js/vendor/jquery-*.js"],
       sass: "assets/sass/*.scss",
-      css: "assets/css/*.css",
+      css: "assets/css",
       img: "assets/img",
       img_src: "assets/img/src",
       img_files: "assets/img/src/**/*.{png,jpg,gif}"
     },
 
+    // Big brother is Watching
     watch: {
         js: {
           files: "<%= dir.js %>/main.js",
@@ -31,9 +32,13 @@ module.exports = function(grunt) {
          files: "<%= dir.js_plugins %>",
          tasks: ["concat"]
         },
+        css: {
+          files: "<%= dir.css %>",
+          tasks: ["copy"]
+        },
         sass: {
           files: "<%= dir.sass %>",
-          tasks: ["compass:dev"]
+          tasks: ["compass:dev", "copy"]
         },
         images: {
           files: "<%= dir.img_files %>",
@@ -58,6 +63,14 @@ module.exports = function(grunt) {
           outputStyle: "compressed",
           environment: "production"
         }
+      }
+    },
+
+    // Move main.css to main.min.css
+    copy: {
+      main: {
+        src: "<%= dir.css %>/main.css",
+        dest: "<%= dir.css %>/main.min.css"
       }
     },
 
@@ -104,6 +117,7 @@ module.exports = function(grunt) {
       }
     },
 
+    // Google Pagespeed
     pagespeed: {
       prod: {
         url: "<%= config.live_url %>",
@@ -122,6 +136,7 @@ module.exports = function(grunt) {
   grunt.registerTask('pack', ["concat", "uglify", "compass:prod", "imagemin"]);
 
   grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-pagespeed');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-compass');
