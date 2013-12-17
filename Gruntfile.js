@@ -14,7 +14,9 @@ module.exports = function(grunt) {
     // Directories
     dir: {
       js: "assets/js",
+      js_vendor: "assets/js/vendor/",
       js_plugins: ["assets/js/vendor/*.js", "!assets/js/vendor/jquery-*.js"],
+      jquery_validate: "assets/js/vendor/validate",
       sass: "assets/sass/*.scss",
       css: "assets/css",
       img: "assets/img",
@@ -30,7 +32,11 @@ module.exports = function(grunt) {
         },
         js_plugins: {
          files: "<%= dir.js_plugins %>",
-         tasks: ["concat"]
+         tasks: ["concat:prod", "uglify:plugins"]
+        },
+        validate: {
+          files: "<%= dir.jquery_validate %>/*",
+          tasks: ["concat:validate"]
         },
         css: {
           files: "<%= dir.css %>",
@@ -38,7 +44,7 @@ module.exports = function(grunt) {
         },
         sass: {
           files: "<%= dir.sass %>",
-          tasks: ["compass:dev", "copy"]
+          tasks: ["copy"]
         },
         images: {
           files: "<%= dir.img_files %>",
@@ -46,6 +52,15 @@ module.exports = function(grunt) {
         }
       },
 
+    // Browser Sync
+    browser_sync: {
+      files: {
+        src: "<%= dir.css %>/main.min.css"
+      },
+      options: {
+        watchTask: true,
+      },
+    },
 
     // Compass
     compass: {
@@ -82,6 +97,10 @@ module.exports = function(grunt) {
       prod: {
         src: ['<%= dir.js_plugins %>'],
         dest: 'assets/js/plugins.min.js'
+      },
+      validate : {
+        src: ['<%= dir.jquery_validate %>/validate.min.js', '<%= dir.jquery_validate %>/validate-locale-fr.js'],
+        dest: 'assets/js/vendor/validate.js'
       }
     },
 
@@ -91,13 +110,14 @@ module.exports = function(grunt) {
         banner: '/*!\n\n Project: <%= pkg.name %> \n Last Updated: <%= grunt.template.today("dd-mm-yyyy") %> \n Copyright (c) <%= grunt.template.today("yyyy") %>, <%= pkg.author %> \n\n */\n\n'
       },
       main: {
+        options: { mangle: false },
         files: {
           '<%= dir.js %>/main.min.js': ['<%= dir.js %>/main.js']
         }
       },
       plugins: {
         files: {
-          'assets/js/plugins.min.js': ['<%= concat.prod.dest %>'],
+          '<%= dir.js %>/plugins.min.js': ['<%= concat.prod.dest %>'],
         }
       }
     },
@@ -132,14 +152,8 @@ module.exports = function(grunt) {
 
   });
 
-  grunt.registerTask('default', ['concat', "compass:dev"]);
-  grunt.registerTask('pack', ["concat", "uglify", "compass:prod", "imagemin"]);
+  grunt.registerTask('default', ['browser_sync', "watch"]);
+  grunt.registerTask('pack', ["concat", "uglify", "compass:prod","copy", "imagemin"]);
 
-  grunt.loadNpmTasks('grunt-contrib-concat');
-  grunt.loadNpmTasks('grunt-contrib-copy');
-  grunt.loadNpmTasks('grunt-pagespeed');
-  grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-contrib-compass');
-  grunt.loadNpmTasks('grunt-contrib-imagemin');
-  grunt.loadNpmTasks('grunt-contrib-watch');
+  require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 };
