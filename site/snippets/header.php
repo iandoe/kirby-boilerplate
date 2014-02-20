@@ -19,7 +19,7 @@
 
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
-        <?php echo css('assets/css/main.min.css') ?>
+        <?php echo css('assets/css/style.min.css') ?>
         <?php echo js('assets/js/vendor/modernizr-2.6.2.min.js') ?>
     </head>
     <body>

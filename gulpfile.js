@@ -2,14 +2,14 @@ var gulp = require("gulp"),
     plugins = require('gulp-load-plugins')({camelize: true});
 
 gulp.task('watch', function() {
-    gulp.watch('assets/sass/main.scss', ['css']);
+    gulp.watch('assets/sass/style.scss', ['css']);
     gulp.watch('assets/js/main.js', ['js']);
     gulp.watch('assets/js/libs/*.js', ['jsplugins']);
     gulp.watch('assets/img/src/*', ['imagemin']);
 });
 
 gulp.task('css', function() {
-    return gulp.src('assets/sass/main.scss')
+    return gulp.src('assets/sass/style.scss')
         .pipe(plugins.compass({
             config_file: 'config.rb',
             sass: 'assets/sass',
