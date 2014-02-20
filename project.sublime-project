@@ -5,7 +5,7 @@
       "path": ".",
       "follow_symlinks": true,
       "file_exclude_patterns": ["*.png", "*.ico", "*.gif", "*.jpg"],
-      "folder_exclude_patterns": [".sass-cache", "node_modules", "assets/fonts", "assets/img", "kirby", "panel", "thumbs"]
+      "folder_exclude_patterns": [".sass-cache", "node_modules", "kirby", "panel", "thumbs"]
     }
   ],
   "build_systems":
