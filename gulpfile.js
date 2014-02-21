@@ -2,7 +2,7 @@ var gulp = require("gulp"),
     plugins = require('gulp-load-plugins')({camelize: true});
 
 gulp.task('watch', function() {
-    gulp.watch('assets/sass/style.scss', ['css']);
+    gulp.watch('assets/sass/**/*.scss', ['css']);
     gulp.watch('assets/js/main.js', ['js']);
     gulp.watch('assets/js/libs/*.js', ['jsplugins']);
     gulp.watch('assets/img/src/*', ['imagemin']);
