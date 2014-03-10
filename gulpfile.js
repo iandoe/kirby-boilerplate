@@ -1,6 +1,5 @@
 var gulp = require('gulp'),
-    plugins = require('gulp-load-plugins')({camelize: true}),
-    server = require('tiny-lr')();
+    plugins = require('gulp-load-plugins')({camelize: true});
 
 gulp.task('watch', function() {
     gulp.watch('assets/sass/**/*.scss', ['css', 'imagemin']);
@@ -31,6 +30,7 @@ gulp.task('css', function() {
 
 gulp.task('js', function() {
     return gulp.src('assets/js/main.js')
+        .pipe(plugins.imports())
         .pipe(plugins.uglify())
         .pipe(plugins.rename({suffix: '.min'}))
         .pipe(gulp.dest('assets/js'))
