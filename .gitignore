@@ -1,0 +1,14 @@
+node_modules/
+.sass-cache/
+.assets/
+kirby/
+thumbs/
+cache/
+panel/
+**/*.min.*
+sprite-*.png
+npm-debug.log
+assets/css/
+**/*.ai
+assets/img/
+!assets/img/src/
