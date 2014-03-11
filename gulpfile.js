@@ -49,13 +49,13 @@ gulp.task('jsplugins', function() {
 gulp.task('imagemin', function() {
     return gulp.src('assets/img/src/*')
     .pipe(
-        // plugins.cache(
+        plugins.cache(
         plugins.imagemin({
             optimizationLevel: 5,
             progressive: false,
             interlaced: true
         })
-        // )
+        )
     )
     .pipe(gulp.dest('assets/img'))
     .pipe(plugins.notify("Images Compressed"))
