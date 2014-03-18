@@ -1,4 +1,5 @@
 var gulp = require('gulp'),
+    pkg = require('./package.json'),
     plugins = require('gulp-load-plugins')({camelize: true});
 
 gulp.task('watch', function() {
@@ -10,10 +11,14 @@ gulp.task('watch', function() {
 
 gulp.task('css', function() {
     return gulp.src('assets/sass/style.scss')
+        .pipe(plugins.plumber())
         .pipe(plugins.compass({
             config_file: 'config.rb',
             sass: 'assets/sass',
             css: 'assets/css'
+        }))
+        .on("error", plugins.notify.onError({
+            title: "💥 SCSS"
         }))
         .pipe(plugins.autoprefixer(
             "last 2 versions", "> 1%", "ie 9", "ie 8"
@@ -25,20 +30,24 @@ gulp.task('css', function() {
         .pipe(plugins.rename({suffix: '.min'}))
         .pipe(gulp.dest('assets/css'))
         // .pipe(plugins.livereload(server))
-        .pipe(plugins.notify("CSS Succesfully Compiled"))
+        .pipe(plugins.notify({
+            message: "CSS Succesfully Compiled",
+    }))
 });
 
 gulp.task('js', function() {
     return gulp.src('assets/js/main.js')
+        .pipe(plugins.plumber())
         .pipe(plugins.imports())
         .pipe(plugins.uglify())
         .pipe(plugins.rename({suffix: '.min'}))
         .pipe(gulp.dest('assets/js'))
-        .pipe(plugins.notify("Main JS Compiled"))
+
 });
 
 gulp.task('jsplugins', function() {
     return gulp.src('assets/js/libs/*.js')
+        .pipe(plugins.plumber())
         .pipe(plugins.concat("plugins.js"))
         .pipe(plugins.uglify())
         .pipe(plugins.rename({suffix: '.min'}))
@@ -58,5 +67,8 @@ gulp.task('imagemin', function() {
         )
     )
     .pipe(gulp.dest('assets/img'))
-    .pipe(plugins.notify("Images Compressed"))
+    .pipe(plugins.notify({
+        message: "Images Compressed",
+        onLast: true
+    }))
 });
