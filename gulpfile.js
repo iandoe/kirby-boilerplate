@@ -4,9 +4,9 @@ var gulp = require('gulp'),
 
 gulp.task('watch', function() {
     gulp.watch('assets/sass/**/*.scss', ['css', 'imagemin']);
-    gulp.watch('assets/js/main.js', ['js']);
+    gulp.watch(['assets/js/main.js', 'assets/js/_*.js'], ['js']);
     gulp.watch('assets/js/libs/*.js', ['jsplugins']);
-    // gulp.watch('assets/img/src/*.png', ['imagemin']);
+    gulp.watch('assets/img/src/*.svg', ['svgmin']);
 });
 
 gulp.task('css', function() {
@@ -53,6 +53,16 @@ gulp.task('jsplugins', function() {
         .pipe(plugins.rename({suffix: '.min'}))
         .pipe(gulp.dest('assets/js'))
         .pipe(plugins.notify("JS Plugins Compiled"))
+});
+
+gulp.task('svgmin', function() {
+    return gulp.src('assets/img/src/*.svg')
+        .pipe(plugins.svgmin())
+        .pipe(gulp.dest('assets/img'))
+        .pipe(plugins.notify({
+            message: "SVG Assets Compressed",
+            onLast: true
+        }))
 });
 
 gulp.task('imagemin', function() {
