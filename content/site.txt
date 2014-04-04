@@ -2,15 +2,7 @@
 
 ----
 
-Author: Wilhearts
-
-----
-
 Description: Kirby is awesome
-
-----
-
-Keywords: kirby, cms, kirbycms, php, filesystem
 
 ----
 
