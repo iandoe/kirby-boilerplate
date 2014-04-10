@@ -1,6 +1,9 @@
 var gulp = require('gulp'),
+    fs = require('fs'),
     pkg = require('./package.json'),
     plugins = require('gulp-load-plugins')({camelize: true});
+
+var banner = fs.readFileSync('banner.js');
 
 gulp.task('watch', function() {
     gulp.watch('assets/sass/**/*.scss', ['css', 'imagemin']);
@@ -28,6 +31,7 @@ gulp.task('css', function() {
             removeEmpty: true
         }))
         .pipe(plugins.rename({suffix: '.min'}))
+        .pipe(plugins.header(banner))
         .pipe(gulp.dest('assets/css'))
         // .pipe(plugins.livereload(server))
         .pipe(plugins.notify({
@@ -41,6 +45,7 @@ gulp.task('js', function() {
         .pipe(plugins.imports())
         .pipe(plugins.uglify())
         .pipe(plugins.rename({suffix: '.min'}))
+        .pipe(plugins.header(banner))
         .pipe(gulp.dest('assets/js'))
 
 });
