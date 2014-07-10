@@ -1,15 +1,24 @@
 var gulp = require('gulp'),
     fs = require('fs'),
     pkg = require('./package.json'),
-    plugins = require('gulp-load-plugins')({camelize: true});
+    plugins = require('gulp-load-plugins')({camelize: true}),
+    browserSync = require('browser-sync'),
+    reload = browserSync.reload;
 
 var banner = fs.readFileSync('banner.js');
 
-gulp.task('watch', function() {
+gulp.task('watch', ['browser-sync'], function() {
     gulp.watch('assets/sass/**/*.scss', ['css', 'imagemin']);
     gulp.watch(['assets/js/main.js', 'assets/js/_*.js'], ['js']);
     gulp.watch('assets/js/libs/*.js', ['jsplugins']);
     gulp.watch('assets/img/src/*.svg', ['svgmin']);
+});
+
+// browser-sync task for starting the server.
+gulp.task('browser-sync', function() {
+    browserSync({
+        proxy: 'kbp.loc'
+    });
 });
 
 gulp.task('css', function() {
@@ -34,6 +43,7 @@ gulp.task('css', function() {
         .pipe(plugins.header(banner))
         .pipe(gulp.dest('assets/css'))
         // .pipe(plugins.livereload(server))
+        .pipe(reload({stream:true}))
         .pipe(plugins.notify({
             message: "CSS Succesfully Compiled",
     }))
@@ -47,6 +57,7 @@ gulp.task('js', function() {
         .pipe(plugins.rename({suffix: '.min'}))
         .pipe(plugins.header(banner))
         .pipe(gulp.dest('assets/js'))
+        .pipe(reload({stream:true, once: true}))
 
 });
 
