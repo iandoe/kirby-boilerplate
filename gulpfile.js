@@ -43,7 +43,7 @@ gulp.task('css', function() {
             "last 2 versions", "> 1%", "ie 9", "ie 8"
         ))
         .pipe(plugins.minifyCss({
-            keepSpecialComments: 1,
+            keepSpecialComments: 0,
             removeEmpty: true
         }))
         .pipe(plugins.rename({suffix: '.min'}))
