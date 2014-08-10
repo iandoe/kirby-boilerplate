@@ -8,5 +8,7 @@ Author:  Guillaume PICARD
 Github:  http://github.com/iandoe
 Contact: wilhearts@gmail.com
 
+Last Updated: <%= date %>
+
 */
 

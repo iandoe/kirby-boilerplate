@@ -1,9 +1,12 @@
 var gulp = require('gulp'),
     fs = require('fs'),
+    moment = require('moment'),
     pkg = require('./package.json'),
     plugins = require('gulp-load-plugins')({camelize: true}),
     browserSync = require('browser-sync'),
     reload = browserSync.reload;
+
+var env = process.env.NODE_ENV;
 
 var banner = fs.readFileSync('banner.js');
 
@@ -16,21 +19,25 @@ gulp.task('watch', ['browser-sync'], function() {
 
 // browser-sync task for starting the server.
 gulp.task('browser-sync', function() {
+
+    // Use current dirname + .loc to determine the domainName
+    var pathArray = __dirname.split('/'),
+        dirname = pathArray[pathArray.length-1],
+        domainName = dirname + ".loc";
+
     browserSync({
-        proxy: 'kbp.loc'
+        proxy: domainName
     });
 });
 
 gulp.task('css', function() {
     return gulp.src('assets/sass/style.scss')
         .pipe(plugins.plumber())
-        .pipe(plugins.compass({
-            config_file: 'config.rb',
-            sass: 'assets/sass',
-            css: 'assets/css'
+        .pipe(plugins.sass({
+            imagePath: '/assets/img/'
         }))
         .on("error", plugins.notify.onError({
-            title: "💥 SCSS"
+            title: "Error with SASS"
         }))
         .pipe(plugins.autoprefixer(
             "last 2 versions", "> 1%", "ie 9", "ie 8"
@@ -40,12 +47,16 @@ gulp.task('css', function() {
             removeEmpty: true
         }))
         .pipe(plugins.rename({suffix: '.min'}))
-        .pipe(plugins.header(banner))
+        .pipe(plugins.header(banner, {
+            date: moment().format('Do MMMM YYYY, HH:mm')
+        }))
         .pipe(gulp.dest('assets/css'))
         // .pipe(plugins.livereload(server))
         .pipe(reload({stream:true}))
         .pipe(plugins.notify({
+            title: pkg.name,
             message: "CSS Succesfully Compiled",
+            activate: "com.google.Chrome"
     }))
 });
 
@@ -55,7 +66,9 @@ gulp.task('js', function() {
         .pipe(plugins.imports())
         .pipe(plugins.uglify())
         .pipe(plugins.rename({suffix: '.min'}))
-        .pipe(plugins.header(banner))
+        .pipe(plugins.header(banner, {
+            date: moment().format('Do MMMM YYYY, HH:mm')
+        }))
         .pipe(gulp.dest('assets/js'))
         .pipe(reload({stream:true, once: true}))
 
