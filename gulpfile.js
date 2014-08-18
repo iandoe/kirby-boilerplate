@@ -14,7 +14,7 @@ gulp.task('watch', ['browser-sync'], function() {
     gulp.watch('assets/sass/**/*.scss', ['css', 'imagemin']);
     gulp.watch(['assets/js/main.js', 'assets/js/_*.js'], ['js']);
     gulp.watch('assets/js/libs/*.js', ['jsplugins']);
-    gulp.watch('assets/img/src/*.svg', ['svgmin']);
+    gulp.watch('assets/svg/src/*.svg', ['svgstore']);
 });
 
 // browser-sync task for starting the server.
@@ -84,12 +84,23 @@ gulp.task('jsplugins', function() {
         .pipe(plugins.notify("JS Plugins Compiled"))
 });
 
-gulp.task('svgmin', function() {
-    return gulp.src('assets/img/src/*.svg')
+gulp.task('svgstore', function() {
+    return gulp.src('assets/svg/src/*.svg')
         .pipe(plugins.svgmin())
-        .pipe(gulp.dest('assets/img'))
+        .pipe(plugins.svgstore({
+            fileName: 'sprites.svg',
+            prefix: 'icon-',
+            inlineSvg: true,
+            transformSvg: function (svg, cb) {
+                svg.find('//*[@fill]').forEach(function (child) {
+                  child.attr('fill').remove()
+                })
+                cb(null)
+            }
+        }))
+        .pipe(gulp.dest('assets/svg'))
         .pipe(plugins.notify({
-            message: "SVG Assets Compressed",
+            message: "SVG Optim + Sprite done",
             onLast: true
         }))
 });
