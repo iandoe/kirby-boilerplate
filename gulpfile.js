@@ -11,9 +11,10 @@ var env = process.env.NODE_ENV;
 var banner = fs.readFileSync('banner.js');
 
 gulp.task('watch', ['browser-sync'], function() {
-    gulp.watch('assets/sass/**/*.scss', ['css', 'imagemin']);
+    gulp.watch('assets/sass/**/*.scss', ['css']);
     gulp.watch(['assets/js/main.js', 'assets/js/_*.js'], ['js']);
     gulp.watch('assets/js/libs/*.js', ['jsplugins']);
+    gulp.watch('assets/img/src/*', ['imagemin']);
     gulp.watch('assets/svg/src/*.svg', ['svgstore']);
 });
 
@@ -32,12 +33,12 @@ gulp.task('browser-sync', function() {
 
 gulp.task('css', function() {
     return gulp.src('assets/sass/style.scss')
-        .pipe(plugins.plumber())
         .pipe(plugins.sass({
-            imagePath: '/assets/img/'
-        }))
-        .on("error", plugins.notify.onError({
-            title: "Error with SASS"
+            imagePath: '/polat/assets/img/',
+            onError: plugins.notify.onError({
+                title: "Error with SASS",
+                sound: "Frog"
+            })
         }))
         .pipe(plugins.autoprefixer(
             "last 2 versions", "> 1%", "ie 9", "ie 8"
@@ -64,7 +65,9 @@ gulp.task('js', function() {
     return gulp.src('assets/js/main.js')
         .pipe(plugins.plumber())
         .pipe(plugins.imports())
-        .pipe(plugins.uglify())
+        .pipe(plugins.uglify({
+            // outSourceMap: true,
+        }))
         .pipe(plugins.rename({suffix: '.min'}))
         .pipe(plugins.header(banner, {
             date: moment().format('Do MMMM YYYY, HH:mm')
@@ -92,13 +95,15 @@ gulp.task('svgstore', function() {
             prefix: 'icon-',
             inlineSvg: true,
             transformSvg: function (svg, cb) {
+                // Remove Fills
+                svg.attr('style', 'display:none');
                 svg.find('//*[@fill]').forEach(function (child) {
                   child.attr('fill').remove()
                 })
                 cb(null)
             }
         }))
-        .pipe(gulp.dest('assets/svg'))
+        .pipe(gulp.dest('site/snippets'))
         .pipe(plugins.notify({
             message: "SVG Optim + Sprite done",
             onLast: true
